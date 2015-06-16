@@ -1,22 +1,22 @@
 /*
  For more information, please see: http://software.sci.utah.edu
- 
+
  The MIT License
- 
+
  Copyright (c) 2015 Scientific Computing and Imaging Institute,
  University of Utah.
- 
- 
+
+
  Permission is hereby granted, free of charge, to any person obtaining a
  copy of this software and associated documentation files (the "Software"),
  to deal in the Software without restriction, including without limitation
  the rights to use, copy, modify, merge, publish, distribute, sublicense,
  and/or sell copies of the Software, and to permit persons to whom the
  Software is furnished to do so, subject to the following conditions:
- 
+
  The above copyright notice and this permission notice shall be included
  in all copies or substantial portions of the Software.
- 
+
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
@@ -26,11 +26,8 @@
  DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef APPLICATION_TOOL_SEEDPOINTSTOOL_H
-#define APPLICATION_TOOL_SEEDPOINTSTOOL_H
-
-#include <Core/Geometry/Point.h>
-#include <Core/State/StateVector.h>
+#ifndef APPLICATION_TOOL_MULTISEEDPOINTSTOOL_H
+#define APPLICATION_TOOL_MULTISEEDPOINTSTOOL_H
 
 #include <Application/Tool/SingleTargetTool.h>
 #include <Application/Tool/SeedPointsInterface.h>
@@ -38,14 +35,14 @@
 namespace Seg3D
 {
 
-class SeedPointsToolPrivate;
-typedef boost::shared_ptr< SeedPointsToolPrivate > SeedPointsToolPrivateHandle;
+class MultiSeedPointsToolPrivate;
+typedef boost::shared_ptr< MultiSeedPointsToolPrivate > MultiSeedPointsToolPrivateHandle;
 
-class SeedPointsTool : public SingleTargetTool, public SeedPointsInterface
+class MultiSeedPointsTool : public SingleTargetTool, public SeedPointsInterface
 {
 public:
-  SeedPointsTool( Core::VolumeType target_volume_type, const std::string& toolid );
-  virtual ~SeedPointsTool() = 0;
+  MultiSeedPointsTool( Core::VolumeType target_volume_type, const std::string& toolid );
+  virtual ~MultiSeedPointsTool() = 0;
 
 public:
   /// HANDLE_MOUSE_PRESS:
@@ -55,7 +52,7 @@ public:
                                    int button, int buttons, int modifiers ) override;
 
   /// HANDLE_MOUSE_MOVE:
-  /// Called when the mouse moves in a viewer.
+  /// Called when the mouse moves  in a viewer.
   virtual bool handle_mouse_move( ViewerHandle viewer,
                                   const Core::MouseHistory& mouse_history,
                                   int button, int buttons, int modifiers ) override;
@@ -82,11 +79,11 @@ public:
 
 public:
   /// HANDLE_SEED_POINTS_CHANGED:
-  /// Called when the seed points have changed.
+   /// Called when the seed points have changed.
   /// The default implementation will cause all the 2D viewers to redraw overlay.
   virtual void handle_seed_points_changed() override;
 
-  /// CLEAR
+  /// CLEAR:
   /// Remove all the seed points.
   virtual void clear( Core::ActionContextHandle context ) override;
 
@@ -94,13 +91,15 @@ public:
   /// Find seed point in viewer and return coordinates.
   virtual bool find_point( ViewerHandle viewer, double world_x, double world_y,
                            Core::VolumeSliceHandle vol_slice, Core::Point& pt ) override;
-  
+
 public:
-  Core::StatePointVectorHandle seed_points_state_;
-  
+  Core::StatePoint2DVectorHandle seed_points_state_;
+
 private:
-  SeedPointsToolPrivateHandle private_;
+  MultiSeedPointsToolPrivateHandle private_;
+
 };
 
 } // end namespace Seg3D
+
 #endif

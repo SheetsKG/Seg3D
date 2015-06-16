@@ -68,7 +68,11 @@ class StateVector;
 //class Point;
 typedef StateVector< Point > StatePointVector;
 typedef boost::shared_ptr< StatePointVector > StatePointVectorHandle;
-  
+
+// class Vector:
+typedef StateVector< StateVector< Point > > StatePoint2DVector;
+typedef boost::shared_ptr< StatePoint2DVector > StatePoint2DVectorHandle;
+
 //class Color;
 typedef StateVector< Color > StateColorVector;
 typedef boost::shared_ptr< StateColorVector > StateColorVectorHandle;
