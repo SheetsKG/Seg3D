@@ -104,66 +104,66 @@ public:
 public:
   /// HANDLE_MOUSE_ENTER:
   /// Called when the mouse has entered a viewer.
-  virtual bool handle_mouse_enter( ViewerHandle viewer, int x, int y );
+  virtual bool handle_mouse_enter( ViewerHandle viewer, int x, int y ) override;
 
   /// HANDLE_MOUSE_LEAVE:
   /// Called when the mouse has left a viewer.
-  virtual bool handle_mouse_leave( ViewerHandle viewer );
+  virtual bool handle_mouse_leave( ViewerHandle viewer ) override;
 
   /// HANDLE_MOUSE_MOVE:
   /// Called when the mouse moves in a viewer.
   virtual bool handle_mouse_move( ViewerHandle viewer, 
     const Core::MouseHistory& mouse_history, 
-    int button, int buttons, int modifiers );
+    int button, int buttons, int modifiers ) override;
 
   /// HANDLE_MOUSE_PRESS:
   /// Called when a mouse button has been pressed.
   virtual bool handle_mouse_press( ViewerHandle viewer, 
     const Core::MouseHistory& mouse_history, 
-    int button, int buttons, int modifiers );
+    int button, int buttons, int modifiers ) override;
 
   /// HANDLE_MOUSE_RELEASE:
   /// Called when a mouse button has been released.
   virtual bool handle_mouse_release( ViewerHandle viewer, 
     const Core::MouseHistory& mouse_history, 
-    int button, int buttons, int modifiers );
+    int button, int buttons, int modifiers ) override;
 
   /// HANDLE_WHEEL:
   /// Called when the mouse wheel has been rotated.
   virtual bool handle_wheel( ViewerHandle viewer, int delta, 
-    int x, int y, int buttons, int modifiers );
+    int x, int y, int buttons, int modifiers ) override;
 
   /// HANDLE_KEY_PRESS:
   /// Called when a key is pressed.
-  virtual bool handle_key_press( ViewerHandle viewer, int key, int modifiers );
+  virtual bool handle_key_press( ViewerHandle viewer, int key, int modifiers ) override;
 
   /// HANDLE_UPDATE_CURSOR:
   /// Called when a viewer requires an update to its cursor.
-  virtual bool handle_update_cursor( ViewerHandle viewer );
+  virtual bool handle_update_cursor( ViewerHandle viewer ) override;
   
   /// REDRAW:
   /// Draw the paint tool in the specified viewer.
   /// The function should only be called by the renderer, which has a valid GL context.
   virtual void redraw( size_t viewer_id, const Core::Matrix& proj_mat,
-    int viewer_width, int viewer_height );
+    int viewer_width, int viewer_height ) override;
 
   /// HAS_2D_VISUAL:
   /// Returns true if the tool draws itself in the 2D view, otherwise false.
   /// The default implementation returns false.
-  virtual bool has_2d_visual();
+  virtual bool has_2d_visual() override;
 
   /// ACTIVATE:
   /// Activate a tool: this tool is set as the active tool and hence it should
   /// setup the right mouse tools in the viewers.
-  virtual void activate();
+  virtual void activate() override;
 
   /// DEACTIVATE:
   /// Deactivate a tool. A tool is always deactivate before the next one is
   /// activated.
-  virtual void deactivate();
+  virtual void deactivate() override;
 
 protected:
-  virtual bool post_load_states();
+  virtual bool post_load_states( const Core::StateIO& ) override;
 
 private:
   friend class ActionPaint;

@@ -1291,8 +1291,9 @@ bool PaintTool::handle_update_cursor( ViewerHandle viewer )
   return true;
 }
 
-bool PaintTool::post_load_states()
+bool PaintTool::post_load_states( const Core::StateIO& state_io )
 {
+  // TODO: does nothing, same as StateHandler. Why override?
   return true;
 }
 
