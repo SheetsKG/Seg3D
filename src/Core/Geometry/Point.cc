@@ -31,6 +31,7 @@
 
 // Core includes
 #include <Core/Geometry/Point.h>
+#include <Core/Utils/Log.h>
 
 namespace Core
 {
@@ -152,7 +153,7 @@ std::string ExportToString( std::vector< std::vector< Point > >& value )
   std::string result(1, '[');
   for ( size_t j = 0; j < value.size(); ++j )
   {
-    result += ExportToString( value [j] ) + ',';
+    result += ExportToString( value [j] ) + '|';
   }
   result[ result.size() - 1 ] = ']';
   return result;
@@ -163,7 +164,7 @@ std::string ExportToString( std::vector< std::vector< PointF > >& value )
   std::string result(1, '[');
   for ( size_t j = 0; j < value.size(); ++j )
   {
-    result += ExportToString( value [j] ) + ',';
+    result += ExportToString( value [j] ) + '|';
   }
   result[ result.size() - 1 ] = ']';
   return result;
@@ -193,52 +194,84 @@ bool ImportFromString( const std::string& str, PointF& value )
   return false;
 }
 
-bool ImportFromString( const std::string& str, std::vector< Point >& value )
+bool BuildPointVector( std::vector< double >& values, std::vector< Point >& pointVector )
 {
-  std::vector< double > values;
-  ImportFromString( str, values );
-
   size_t num_values = values.size() / 3;
   if ( values.size() == num_values * 3 )
   {
-    value.resize( num_values );
+    pointVector.resize( num_values );
     for ( size_t j = 0; j < num_values; j++ )
     {
       size_t offset = j * 3;
-      value[ j ] = Point( values[ offset + 0 ], values[ offset + 1 ], values[ offset + 2 ] );
+      pointVector[ j ] = Point( values[ offset + 0 ], values[ offset + 1 ], values[ offset + 2 ] );
     }
     return true;
   }
   return false;
+}
+
+bool BuildPointFVector( std::vector< float >& values, std::vector< PointF >& pointVector )
+{
+  size_t num_values = values.size() / 3;
+  if ( values.size() == num_values * 3 )
+  {
+    pointVector.resize( num_values );
+    for ( size_t j = 0; j < num_values; j++ )
+    {
+      size_t offset = j * 3;
+      pointVector[ j ] = PointF( values[ offset + 0 ], values[ offset + 1 ], values[ offset + 2 ] );
+    }
+    return true;
+  }
+  return false;
+}
+
+bool ImportFromString( const std::string& str, std::vector< Point >& value )
+{
+  std::vector< double > values;
+  ImportFromString( str, values );
+  return BuildPointVector( values, value );
 }
 
 bool ImportFromString( const std::string& str, std::vector< PointF >& value )
 {
   std::vector< float > values;
   ImportFromString( str, values );
-
-  size_t num_values = values.size() / 3;
-  if ( values.size() == num_values * 3 )
-  {
-    value.resize( num_values );
-    for ( size_t j = 0; j < num_values; j++ )
-    {
-      size_t offset = j * 3;
-      value[ j ] = PointF( values[ offset + 0 ], values[ offset + 1 ], values[ offset + 2 ] );
-    }
-    return true;
-  }
-  return false;
+  return BuildPointFVector( values, value );
 }
 
 bool ImportFromString( const std::string& str, std::vector< std::vector< Point > >& value )
 {
-  return false;
+  std::vector< std::vector< double > > values;
+  ImportFromString( str, values );
+  for (auto &v: values)
+  {
+    std::vector< Point > pointVector;
+    if (! BuildPointVector(v, pointVector) )
+    {
+      CORE_LOG_DEBUG("Converting vector of doubles to points failed.");
+      return false;
+    }
+    value.push_back(pointVector);
+  }
+  return true;
 }
 
 bool ImportFromString( const std::string& str, std::vector< std::vector< PointF > >& value )
 {
-  return false;
+  std::vector< std::vector< float > > values;
+  ImportFromString( str, values );
+  for (auto &v: values)
+  {
+    std::vector< PointF > pointVector;
+    if (! BuildPointFVector(v, pointVector) )
+    {
+      CORE_LOG_DEBUG("Converting vector of floats to points failed.");
+      return false;
+    }
+    value.push_back(pointVector);
+  }
+  return true;
 }
 
 } // End namespace SCIRun

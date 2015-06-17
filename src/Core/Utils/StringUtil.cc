@@ -38,6 +38,8 @@
 #include <Core/Utils/StringUtil.h>
 #include <Core/Math/MathFunctions.h>
 
+#include <boost/algorithm/string.hpp>
+
 namespace Core
 {
 
@@ -50,8 +52,8 @@ bool FromString( const std::string &str, T &value )
 {
     std::string data = str + " ";
     for ( size_t j = 0; j < data.size(); j++ )
-        if ( ( data[ j ] == '\t' ) || ( data[ j ] == '\r' ) || ( data[ j ] == '\n' ) || ( data[ j ]
-                                                                                         == '"' ) || ( data[ j ] == ',' ) || ( data[ j ] == '[' ) || ( data[ j ] == ']' )
+        if ( ( data[ j ] == '\t' ) || ( data[ j ] == '\r' ) || ( data[ j ] == '\n' )
+            || ( data[ j ] == '"' ) || ( data[ j ] == ',' ) || ( data[ j ] == '[' ) || ( data[ j ] == ']' )
             || ( data[ j ] == '(' ) || ( data[ j ] == ')' ) ) data[ j ] = ' ';
     
     std::istringstream iss( data );
@@ -76,8 +78,8 @@ bool MultipleFromString( const std::string &str, std::vector< T > &values )
   // replace it all with spaces.
   std::string data = str;
   for ( size_t j = 0; j < data.size(); j++ )
-    if ( ( data[ j ] == '\t' ) || ( data[ j ] == '\r' ) || ( data[ j ] == '\n' ) || ( data[ j ]
-        == '"' ) || ( data[ j ] == ',' ) || ( data[ j ] == '[' ) || ( data[ j ] == ']' )
+    if ( ( data[ j ] == '\t' ) || ( data[ j ] == '\r' ) || ( data[ j ] == '\n' )
+        || ( data[ j ] == '"' ) || ( data[ j ] == ',' ) || ( data[ j ] == '[' ) || ( data[ j ] == ']' )
         || ( data[ j ] == '(' ) || ( data[ j ] == ')' ) ) data[ j ] = ' ';
 
   // Loop over the data and extract all numbers from it.
@@ -976,7 +978,43 @@ bool ImportFromString( const std::string& str, std::vector< double >& value )
 {
   return ( MultipleFromString( str, value ) );
 }
-  
+
+bool ImportFromString( const std::string& str, std::vector< std::vector< float > >& value )
+{
+  std::vector<std::string> strings;
+  boost::split(strings, str, boost::is_any_of("|"));
+
+  for (auto s : strings)
+  {
+    std::vector< float > v;
+    if (! MultipleFromString( s, v ) )
+    {
+      CORE_LOG_DEBUG("Failed to parse " + s);
+      return false;
+    }
+    value.push_back(v);
+  }
+  return true;
+}
+
+bool ImportFromString( const std::string& str, std::vector< std::vector< double > >& value )
+{
+  std::vector<std::string> strings;
+  boost::split(strings, str, boost::is_any_of("|"));
+
+  for (auto s : strings)
+  {
+    std::vector< double > v;
+    if (! MultipleFromString( s, v ) )
+    {
+      CORE_LOG_DEBUG("Failed to parse " + s);
+      return false;
+    }
+    value.push_back(v);
+  }
+  return true;
+}
+
 bool ImportFromString( const std::string& str, std::vector< std::string >& value )
 {
   std::string data = str;

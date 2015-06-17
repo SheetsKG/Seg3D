@@ -35,15 +35,19 @@
 
 // STL
 #include <string>
+#include <vector>
 
 // boost includes
 #include <boost/regex.hpp>
 
 // Core
+#include <Core/Geometry/Point.h>
 #include <Core/Utils/StringUtil.h>
 
 namespace Core
 {
+
+typedef std::vector< std::vector<Point> > PointVector2D;
 
 // ACTIONPARAMETERBASE:
 /// Base class needed for uniform access to import and export the value
@@ -175,6 +179,52 @@ public:
 protected:
   /// The actual parameter (as a reference)
   std::string& parameter_;
+};
+
+/// Template specialization for PointVector2D parameter
+template<>
+class ActionParameter< PointVector2D > : public ActionParameterBase
+{
+  // -- constructor/destructor --
+public:
+  ActionParameter( PointVector2D& parameter ) :
+  parameter_( parameter )
+  {
+  }
+
+  // -- access to value --
+public:
+
+  // IMPORT_FROM_STRING
+  /// import a parameter from a PointVector2D. The function returns true
+  /// if the import succeeded
+  virtual bool import_from_string( const std::string& str )
+  {
+//    return ImportFromString( str, this->parameter_ );
+    return false;
+  }
+
+  // EXPORT_TO_STRING
+  /// export the contents of the parameter to string
+  virtual std::string export_to_string() const
+  {
+//    static const boost::regex reg( "[\\\\']" );
+//    // Format the string so it can be directly used as a string in python
+//    return "'" + boost::regex_replace( ExportToString( this->parameter_ ), reg,
+//                                      "\\\\$&", boost::regex_constants::format_default ) + "'";
+    return std::string();
+  }
+
+  // HAS_EXTENSION
+  /// Has extended information in the derived class
+  virtual bool has_extension() const
+  {
+    return false;
+  }
+
+protected:
+  /// The actual parameter (as a reference)
+  PointVector2D& parameter_;
 };
 
 } // namespace Core

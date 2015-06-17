@@ -63,6 +63,8 @@ protected:
     pointsFVector2.push_back( PointF(0, 2.0f, 0) );
     pointsFVector2.push_back( PointF(0, 0, 2.0f) );
     pointsFVector2D_2.push_back( pointsFVector2 );
+
+    pointsString2D_2 = "[[[1.0,0,0],[0,1.0,0],[0,0,1.0]]|[[2.0,0,0],[0,2.0,0],[0,0,2.0]]]";
   }
 
   Point zero;
@@ -78,72 +80,73 @@ protected:
   std::vector<PointF> pointsFVector;
   std::vector< std::vector<PointF> > pointsFVector2D_1;
   std::vector< std::vector<PointF> > pointsFVector2D_2;
+  std::string pointsString2D_2;
 };
 
-TEST_F(PointStringTests, zeroPoint)
+TEST_F(PointStringTests, exportZeroPoint)
 {
   std::string result = ExportToString( zero );
   ASSERT_FALSE( result.empty() );
   std::cerr << result << std::endl;
 }
 
-TEST_F(PointStringTests, zeroPointF)
+TEST_F(PointStringTests, exportZeroPointF)
 {
   std::string result = ExportToString( zeroF );
   ASSERT_FALSE( result.empty() );
   std::cerr << result << std::endl;
 }
 
-TEST_F(PointStringTests, basicPoint)
+TEST_F(PointStringTests, exportBasicPoint)
 {
   std::string result = ExportToString( sample );
   ASSERT_FALSE( result.empty() );
   std::cerr << result << std::endl;
 }
 
-TEST_F(PointStringTests, basicPointF)
+TEST_F(PointStringTests, exportBasicPointF)
 {
   std::string result = ExportToString( sampleF );
   ASSERT_FALSE( result.empty() );
   std::cerr << result << std::endl;
 }
 
-TEST_F(PointStringTests, basicPointNoDecimals)
+TEST_F(PointStringTests, exportBasicPointNoDecimals)
 {
   std::string result = ExportToString( Point(5, -3, 1) );
   ASSERT_FALSE( result.empty() );
   std::cerr << result << std::endl;
 }
 
-TEST_F(PointStringTests, basicPointFNoDecimals)
+TEST_F(PointStringTests, exportBasicPointFNoDecimals)
 {
   std::string result = ExportToString( PointF(5, -3, 1) );
   ASSERT_FALSE( result.empty() );
   std::cerr << result << std::endl;
 }
 
-TEST_F(PointStringTests, pointsVector)
+TEST_F(PointStringTests, exportPointsVector)
 {
   std::string result = ExportToString(pointsVector);
   ASSERT_FALSE( result.empty() );
   std::cerr << result << std::endl;
 }
 
-TEST_F(PointStringTests, pointsFVector)
+TEST_F(PointStringTests, exportPointsFVector)
 {
   std::string result = ExportToString(pointsFVector);
   ASSERT_FALSE( result.empty() );
   std::cerr << result << std::endl;
 }
 
-TEST_F(PointStringTests, pointsVector2DOneEntry)
+TEST_F(PointStringTests, exportPointsVector2DOneEntry)
 {
   std::string result = ExportToString(pointsVector2D_1);
   ASSERT_FALSE( result.empty() );
   std::cerr << result << std::endl;
 }
 
-TEST_F(PointStringTests, pointsFVectorOneEntry)
+TEST_F(PointStringTests, exportPointsFVectorOneEntry)
 {
   std::string result = ExportToString(pointsFVector2D_1);
   ASSERT_FALSE( result.empty() );
@@ -151,16 +154,47 @@ TEST_F(PointStringTests, pointsFVectorOneEntry)
 }
 
 
-TEST_F(PointStringTests, pointsVector2DTwoEntries)
+TEST_F(PointStringTests, exportPointsVector2DTwoEntries)
 {
   std::string result = ExportToString(pointsVector2D_2);
   ASSERT_FALSE( result.empty() );
   std::cerr << result << std::endl;
 }
 
-TEST_F(PointStringTests, pointsFVectorTwoEntries)
+TEST_F(PointStringTests, exportPointsFVector2DTwoEntries)
 {
   std::string result = ExportToString(pointsFVector2D_2);
   ASSERT_FALSE( result.empty() );
   std::cerr << result << std::endl;
+}
+
+TEST_F(PointStringTests, importPointsVector2DTwoEntries)
+{
+  std::vector< std::vector<double> > values;
+  ImportFromString(pointsString2D_2, values);
+  ASSERT_EQ( values.size(), 2 );
+  for( auto v: values )
+  {
+    std::ostringstream oss;
+    oss << "[ ";
+    std::for_each(v.begin(), v.end(), [&oss](double x){ oss << x << " "; });
+    oss << "]";
+    std::cerr << oss.str() << std::endl;
+  }
+}
+
+
+TEST_F(PointStringTests, importPointsFVector2DTwoEntries)
+{
+  std::vector< std::vector<float> > values;
+  ImportFromString(pointsString2D_2, values);
+  ASSERT_EQ( values.size(), 2 );
+  for( auto v: values )
+  {
+    std::ostringstream oss;
+    oss << "[ ";
+    std::for_each(v.begin(), v.end(), [&oss](float x){ oss << x << " "; });
+    oss << "]";
+    std::cerr << oss.str() << std::endl;
+  }
 }

@@ -151,6 +151,9 @@ bool ImportFromString( const std::string& str, std::vector< unsigned long long>&
 bool ImportFromString( const std::string& str, std::vector< float >& value );
 bool ImportFromString( const std::string& str, std::vector< double >& value );
 
+bool ImportFromString( const std::string& str, std::vector< std::vector< float > >& value );
+bool ImportFromString( const std::string& str, std::vector< std::vector< double > >& value );
+
 bool ImportFromString( const std::string& str, std::set< int >& value );
 
 // Convert string to upper or lower case 
