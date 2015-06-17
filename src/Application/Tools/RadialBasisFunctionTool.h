@@ -29,14 +29,14 @@
 #ifndef APPLICATION_TOOLS_RADIALBASISFUNCTIONTOOL_H
 #define APPLICATION_TOOLS_RADIALBASISFUNCTIONTOOL_H
 
-#include <Application/Tool/SeedPointsTool.h>
+#include <Application/Tool/MultiSeedPointsTool.h>
 
 namespace Seg3D
 {
 
 class RadialBasisFunctionTool;
 
-class RadialBasisFunctionTool : public SeedPointsTool
+class RadialBasisFunctionTool : public MultiSeedPointsTool
 {
 SEG3D_TOOL(
   SEG3D_TOOL_NAME( "RadialBasisFunctionTool", "Radial basis function segmentation tool." )
@@ -61,43 +61,8 @@ public:
   /// Execute the tool and dispatch the action
   virtual void execute( Core::ActionContextHandle context );
 
-//  /// HANDLE_MOUSE_PRESS:
-//  /// Called when a mouse button has been pressed.
-//  virtual bool handle_mouse_press( ViewerHandle viewer,
-//                                   const Core::MouseHistory& mouse_history,
-//                                   int button, int buttons, int modifiers );
-//
-//  /// HANDLE_MOUSE_RELEASE:
-//  /// Called when a mouse button has been released.
-//  virtual bool handle_mouse_release( ViewerHandle viewer,
-//                                     const Core::MouseHistory& mouse_history,
-//                                     int button, int buttons, int modifiers );
-//
-//  /// HANDLE_MOUSE_MOVE:
-//  /// Called when the mouse moves in a viewer.
-//  virtual bool handle_mouse_move( ViewerHandle viewer,
-//                                  const Core::MouseHistory& mouse_history,
-//                                  int button, int buttons, int modifiers );
-//
-//  /// REDRAW:
-//  /// Draw seed points in the specified viewer.
-//  /// The function should only be called by the renderer, which has a valid GL context.
-//  virtual void redraw( size_t viewer_id, const Core::Matrix& proj_mat,
-//                       int viewer_width, int viewer_height );
-//
-//  /// HAS_2D_VISUAL:
-//  /// Returns true if the tool draws itself in the 2D view, otherwise false.
-//  /// The default implementation returns false.
-//  virtual bool has_2d_visual();
-//  
-//  /// HANDLE_SEED_POINTS_CHANGED:
-//  /// Called when the seed points have changed.
-//  /// The default implementation will cause all the 2D viewers to redraw overlay.
-//  virtual void handle_seed_points_changed();
-
 private:
   void handle_target_layer_changed();
-	size_t signal_block_count_;
 };
   
 } // end namespace

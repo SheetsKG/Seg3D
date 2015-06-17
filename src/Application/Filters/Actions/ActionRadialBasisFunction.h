@@ -43,6 +43,7 @@ typedef boost::shared_ptr< ActionRadialBasisFunctionPrivate > ActionRadialBasisF
 
 typedef Core::Point VertexCoord;
 typedef std::vector< VertexCoord > VertexList;
+typedef std::vector< VertexList > VertexList2D;
 
 class ActionRadialBasisFunction : public Seg3D::LayerAction
 {
@@ -81,7 +82,7 @@ public:
   static void Dispatch(
                        Core::ActionContextHandle context,
                        const std::string& target,
-                       const VertexList& vertices,
+                       const VertexList2D& vertices,
                        double normalOffset,
                        const std::string& kernel
                       );

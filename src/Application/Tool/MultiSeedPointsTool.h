@@ -79,7 +79,7 @@ public:
 
 public:
   /// HANDLE_SEED_POINTS_CHANGED:
-   /// Called when the seed points have changed.
+  /// Called when the seed points have changed.
   /// The default implementation will cause all the 2D viewers to redraw overlay.
   virtual void handle_seed_points_changed() override;
 
@@ -93,7 +93,13 @@ public:
                            Core::VolumeSliceHandle vol_slice, Core::Point& pt ) override;
 
 public:
+  /// HANDLE_NEW_POINTS_SET:
+  /// Called to insert new points vector into the seed points 2D vector.
+  virtual void handle_new_points_vector( Core::ActionContextHandle context );
+
+public:
   Core::StatePoint2DVectorHandle seed_points_state_;
+  Core::StateBoolHandle insert_new_points_vector_state_;
 
 private:
   MultiSeedPointsToolPrivateHandle private_;

@@ -28,6 +28,11 @@
 
 #include <Application/Tool/MultiSeedPointsTool.h>
 
+#include <Core/State/Actions/ActionAdd.h>
+#include <Core/State/Actions/ActionClear.h>
+#include <Core/State/Actions/ActionRemove.h>
+#include <Application/ViewerManager/ViewerManager.h>
+
 namespace Seg3D
 {
 
@@ -73,12 +78,16 @@ bool MultiSeedPointsTool::find_point( ViewerHandle viewer, double world_x, doubl
 
 void MultiSeedPointsTool::clear( Core::ActionContextHandle context )
 {
-//  Core::ActionClear::Dispatch( context, this->seed_points_state_ );
+  Core::ActionClear::Dispatch( context, this->seed_points_state_ );
 }
 
 void MultiSeedPointsTool::handle_seed_points_changed()
 {
-//  ViewerManager::Instance()->update_2d_viewers_overlay();
+  ViewerManager::Instance()->update_2d_viewers_overlay();
+}
+
+void MultiSeedPointsTool::handle_new_points_vector( Core::ActionContextHandle context )
+{
 }
 
 }

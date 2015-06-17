@@ -106,7 +106,7 @@ public:
   LayerHandle srcLayer_;
   LayerHandle dstLayer_;
   std::string targetLayerID_;
-  VertexList vertices_;
+  VertexList2D vertices_;
   double normalOffset_;
   std::string kernel_;
   double thresholdValue_;
@@ -126,13 +126,19 @@ public:
     DataLayerHandle dstDataLayer = boost::dynamic_pointer_cast<DataLayer>(this->actionInternal_->dstLayer_);
     GridTransform srcGridTransform = srcDataLayer->get_grid_transform();
 
-    std::vector<vec3> rbfPointData;
-    for (VertexList::iterator it = this->actionInternal_->vertices_.begin();
-         it != this->actionInternal_->vertices_.end();
-         ++it)
+    // TODO: need revised interface
+    std::vector< std::vector<vec3> > rbfPointDataList2D;
+    for (VertexList2D::iterator listIt = this->actionInternal_->vertices_.begin();
+         listIt != this->actionInternal_->vertices_.end();
+         ++listIt)
     {
-      std::cerr << *it << std::endl;
-      rbfPointData.push_back( vec3(it->x(), it->y(), it->z()) );
+      std::vector<vec3> rbfPointData;
+      for(VertexList::iterator it = listIt->begin(); it != listIt->end(); ++it)
+      {
+        std::cerr << *it << std::endl;
+        rbfPointData.push_back( vec3(it->x(), it->y(), it->z()) );
+      }
+      rbfPointDataList2D.push_back( rbfPointData );
     }
     // origin and size from source data layer
     Point origin = srcGridTransform.get_origin();
@@ -157,7 +163,7 @@ public:
       kernel = MultiQuadratic;
     }
 
-    RBFInterface rbfAlgo(rbfPointData, rbfOrigin, rbfGridSize, rbfGridSpacing, this->actionInternal_->normalOffset_, kernel);
+    RBFInterface rbfAlgo(rbfPointDataList2D, rbfOrigin, rbfGridSize, rbfGridSpacing, this->actionInternal_->normalOffset_, kernel);
     this->actionInternal_->thresholdValue_ = rbfAlgo.getThresholdValue();
 
     Core::DataBlockHandle dstDataBlock = Core::StdDataBlock::New( srcGridTransform, Core::DataType::FLOAT_E );
@@ -319,7 +325,7 @@ bool ActionRadialBasisFunction::run_threshold( ActionContextHandle& context )
 void ActionRadialBasisFunction::Dispatch(
                                            ActionContextHandle context,
                                            const std::string& target,
-                                           const VertexList& vertices,
+                                           const VertexList2D& vertices,
                                            double normalOffset,
                                            const std::string& kernel
                                          )

@@ -3,7 +3,7 @@
 # 
 #  The MIT License
 # 
-#  Copyright (c) 2009 Scientific Computing and Imaging Institute,
+#  Copyright (c) 2015 Scientific Computing and Imaging Institute,
 #  University of Utah.
 # 
 #  
@@ -33,6 +33,8 @@
 SET(APPLICATION_TOOL_SRCS
   GroupTargetTool.h
   GroupTargetTool.cc
+  MultiSeedPointsTool.h
+  MultiSeedPointsTool.cc
   SeedPointsTool.h
   SeedPointsTool.cc
   SingleTargetTool.h
