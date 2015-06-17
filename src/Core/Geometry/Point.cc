@@ -3,7 +3,7 @@
 
  The MIT License
 
- Copyright (c) 2009 Scientific Computing and Imaging Institute,
+ Copyright (c) 2015 Scientific Computing and Imaging Institute,
  University of Utah.
 
 
@@ -24,7 +24,7 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  DEALINGS IN THE SOFTWARE.
- */
+*/
 
 // STL includes
 #include <sstream>
@@ -147,6 +147,28 @@ std::string ExportToString( const std::vector< PointF >& value )
   return result;
 }
 
+std::string ExportToString( std::vector< std::vector< Point > >& value )
+{
+  std::string result(1, '[');
+  for ( size_t j = 0; j < value.size(); ++j )
+  {
+    result += ExportToString( value [j] ) + ',';
+  }
+  result[ result.size() - 1 ] = ']';
+  return result;
+}
+
+std::string ExportToString( std::vector< std::vector< PointF > >& value )
+{
+  std::string result(1, '[');
+  for ( size_t j = 0; j < value.size(); ++j )
+  {
+    result += ExportToString( value [j] ) + ',';
+  }
+  result[ result.size() - 1 ] = ']';
+  return result;
+}
+
 bool ImportFromString( const std::string& str, Point& value )
 {
   std::vector< double > values;
@@ -154,9 +176,9 @@ bool ImportFromString( const std::string& str, Point& value )
   if ( values.size() == 3 )
   {
     value = Point( values[ 0 ], values[ 1 ], values[ 2 ] );
-    return ( true );
+    return true;
   }
-  return ( false );
+  return false;
 }
 
 bool ImportFromString( const std::string& str, PointF& value )
@@ -166,9 +188,9 @@ bool ImportFromString( const std::string& str, PointF& value )
   if ( values.size() == 3 )
   {
     value = PointF( values[ 0 ], values[ 1 ], values[ 2 ] );
-    return ( true );
+    return true;
   }
-  return ( false );
+  return false;
 }
 
 bool ImportFromString( const std::string& str, std::vector< Point >& value )
@@ -185,9 +207,9 @@ bool ImportFromString( const std::string& str, std::vector< Point >& value )
       size_t offset = j * 3;
       value[ j ] = Point( values[ offset + 0 ], values[ offset + 1 ], values[ offset + 2 ] );
     }
-    return ( true );
+    return true;
   }
-  return ( false );
+  return false;
 }
 
 bool ImportFromString( const std::string& str, std::vector< PointF >& value )
@@ -204,9 +226,19 @@ bool ImportFromString( const std::string& str, std::vector< PointF >& value )
       size_t offset = j * 3;
       value[ j ] = PointF( values[ offset + 0 ], values[ offset + 1 ], values[ offset + 2 ] );
     }
-    return ( true );
+    return true;
   }
-  return ( false );
+  return false;
+}
+
+bool ImportFromString( const std::string& str, std::vector< std::vector< Point > >& value )
+{
+  return false;
+}
+
+bool ImportFromString( const std::string& str, std::vector< std::vector< PointF > >& value )
+{
+  return false;
 }
 
 } // End namespace SCIRun

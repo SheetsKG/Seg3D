@@ -3,7 +3,7 @@
 
  The MIT License
 
- Copyright (c) 2009 Scientific Computing and Imaging Institute,
+ Copyright (c) 2015 Scientific Computing and Imaging Institute,
  University of Utah.
 
 
@@ -24,7 +24,7 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  DEALINGS IN THE SOFTWARE.
- */
+*/
 
 #ifndef CORE_GEOMETRY_POINT_H
 #define CORE_GEOMETRY_POINT_H
@@ -270,12 +270,17 @@ std::string ExportToString( const PointF& value );
 std::string ExportToString( const std::vector< Point >& value );
 std::string ExportToString( const std::vector< PointF >& value );
 
+std::string ExportToString( std::vector< std::vector< Point > >& value );
+std::string ExportToString( std::vector< std::vector< PointF > >& value );
+
 bool ImportFromString( const std::string& str, Point& value );
 bool ImportFromString( const std::string& str, PointF& value );
 
 bool ImportFromString( const std::string& str, std::vector< Point >& value );
 bool ImportFromString( const std::string& str, std::vector< PointF >& value );
 
+bool ImportFromString( const std::string& str, std::vector< std::vector< Point > >& value );
+bool ImportFromString( const std::string& str, std::vector< std::vector< PointF > >& value );
 
 } // End namespace Core
 
