@@ -106,7 +106,7 @@ public:
   LayerHandle srcLayer_;
   LayerHandle dstLayer_;
   std::string targetLayerID_;
-  VertexList2D vertices_;
+  VertexList vertices_;
   double normalOffset_;
   std::string kernel_;
   double thresholdValue_;
@@ -117,8 +117,8 @@ class RadialBasisFunctionAlgo : public LayerFilter
 public:
   ActionRadialBasisFunctionPrivateHandle actionInternal_;
 
-	RadialBasisFunctionAlgo();
-	virtual ~RadialBasisFunctionAlgo();
+  RadialBasisFunctionAlgo();
+  virtual ~RadialBasisFunctionAlgo();
   
   SCI_BEGIN_RUN()
   {
@@ -126,19 +126,13 @@ public:
     DataLayerHandle dstDataLayer = boost::dynamic_pointer_cast<DataLayer>(this->actionInternal_->dstLayer_);
     GridTransform srcGridTransform = srcDataLayer->get_grid_transform();
 
-    // TODO: need revised interface
-    std::vector< std::vector<vec3> > rbfPointDataList2D;
-    for (VertexList2D::iterator listIt = this->actionInternal_->vertices_.begin();
-         listIt != this->actionInternal_->vertices_.end();
-         ++listIt)
+    std::vector<vec3> rbfPointData;
+    for (VertexList::iterator it = this->actionInternal_->vertices_.begin();
+         it != this->actionInternal_->vertices_.end();
+         ++it)
     {
-      std::vector<vec3> rbfPointData;
-      for(VertexList::iterator it = listIt->begin(); it != listIt->end(); ++it)
-      {
-        std::cerr << *it << std::endl;
-        rbfPointData.push_back( vec3(it->x(), it->y(), it->z()) );
-      }
-      rbfPointDataList2D.push_back( rbfPointData );
+      std::cerr << *it << std::endl;
+      rbfPointData.push_back( vec3(it->x(), it->y(), it->z()) );
     }
     // origin and size from source data layer
     Point origin = srcGridTransform.get_origin();
@@ -163,7 +157,7 @@ public:
       kernel = MultiQuadratic;
     }
 
-    RBFInterface rbfAlgo(rbfPointDataList2D, rbfOrigin, rbfGridSize, rbfGridSpacing, this->actionInternal_->normalOffset_, kernel);
+    RBFInterface rbfAlgo(rbfPointData, rbfOrigin, rbfGridSize, rbfGridSpacing, this->actionInternal_->normalOffset_, kernel);
     this->actionInternal_->thresholdValue_ = rbfAlgo.getThresholdValue();
 
     Core::DataBlockHandle dstDataBlock = Core::StdDataBlock::New( srcGridTransform, Core::DataType::FLOAT_E );
@@ -258,17 +252,17 @@ bool ActionRadialBasisFunction::validate( ActionContextHandle& context )
 
 bool ActionRadialBasisFunction::run( ActionContextHandle& context, ActionResultHandle& result )
 {
-	boost::shared_ptr< RadialBasisFunctionAlgo > algo( new RadialBasisFunctionAlgo() );
-  
-	// Set up parameters
-	algo->set_sandbox( this->sandbox_ );
+  boost::shared_ptr< RadialBasisFunctionAlgo > algo( new RadialBasisFunctionAlgo() );
+
+  // Set up parameters
+  algo->set_sandbox( this->sandbox_ );
   algo->actionInternal_ = this->private_;
 
-	// Find the handle to the layer
-	if ( !( algo->find_layer( this->private_->targetLayerID_, this->private_->srcLayer_ ) ) )
-	{
-		return false;
-	}
+  // Find the handle to the layer
+  if ( !( algo->find_layer( this->private_->targetLayerID_, this->private_->srcLayer_ ) ) )
+  {
+    return false;
+  }
 
   // Lock the src layer, so it cannot be used else where
   algo->lock_for_use( this->private_->srcLayer_ );
@@ -276,22 +270,22 @@ bool ActionRadialBasisFunction::run( ActionContextHandle& context, ActionResultH
   // Create the destination layer, which will show progress
   algo->create_and_lock_data_layer_from_layer( this->private_->srcLayer_, private_->dstLayer_ );
 
-	// Return the id of the destination layer.
-	result = ActionResultHandle( new ActionResult( this->private_->dstLayer_->get_layer_id() ) );
+  // Return the id of the destination layer.
+  result = ActionResultHandle( new ActionResult( this->private_->dstLayer_->get_layer_id() ) );
 
-	// If the action is run from a script (provenance is a special case of script),
-	// return a notifier that the script engine can wait on.
-	if ( context->source() == ActionSource::SCRIPT_E ||
+  // If the action is run from a script (provenance is a special case of script),
+  // return a notifier that the script engine can wait on.
+  if ( context->source() == ActionSource::SCRIPT_E ||
        context->source() == ActionSource::PROVENANCE_E )
-	{
-		context->report_need_resource( algo->get_notifier() );
-	}
+  {
+    context->report_need_resource( algo->get_notifier() );
+  }
 
-	// Build the undo-redo record
-	algo->create_undo_redo_and_provenance_record( context, this->shared_from_this() );
+  // Build the undo-redo record
+  algo->create_undo_redo_and_provenance_record( context, this->shared_from_this() );
 
-	// Start the filter.
-	Runnable::Start( algo );
+  // Start the filter.
+  Runnable::Start( algo );
 
   ActionContextHandle layerContext( new ActionContext() );
   // wait for layer
@@ -325,7 +319,7 @@ bool ActionRadialBasisFunction::run_threshold( ActionContextHandle& context )
 void ActionRadialBasisFunction::Dispatch(
                                            ActionContextHandle context,
                                            const std::string& target,
-                                           const VertexList2D& vertices,
+                                           const VertexList& vertices,
                                            double normalOffset,
                                            const std::string& kernel
                                          )
