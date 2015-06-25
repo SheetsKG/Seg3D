@@ -40,6 +40,7 @@
 
 // Application includes
 #include <Application/Layer/MaskLayer.h>
+#include <Application/Layer/LayerManager.h>
 #include <Application/PreferencesManager/PreferencesManager.h>
 #include <Application/ProjectManager/ProjectManager.h>
 
@@ -422,14 +423,14 @@ void MaskLayer::compute_isosurface( double quality_factor, bool capping_enabled 
   {
     this->isosurface_updated_signal_();
   }
-  
-  // now that we are done, we are going to set the proper 
+
   this->iso_generated_state_->set( true );
+  LayerManager::Instance()->mask_layer_isosurface_created_signal_();
 }
 
 void MaskLayer::delete_isosurface()
 {
-  if ( !Core::Application::IsApplicationThread() )
+  if ( ! Core::Application::IsApplicationThread() )
   {
     Core::Application::PostEvent( boost::bind( &MaskLayer::delete_isosurface, this ) );
     return;
@@ -446,6 +447,8 @@ void MaskLayer::delete_isosurface()
   } 
   
   this->iso_generated_state_->set( false );
+
+  LayerManager::Instance()->mask_layer_isosurface_deleted_signal_();
 }
 
 void MaskLayer::calculate_volume()
